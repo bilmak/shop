@@ -8,7 +8,7 @@ type Product struct {
 	Price int    `json:"price"`
 }
 
-func (p Product) Validate() error {
+func (p Product) ValidateProduct() error {
 	if p.Name == "" || p.Price == 0 {
 		return errors.New("requared field is empty")
 	}

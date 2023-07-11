@@ -48,14 +48,13 @@ func (c CustomerStorage) DeleteCustomer(id int) {
 	}
 }
 
-func (c CustomerStorage) GetAllCustomers() []core.Customer {
+func (c CustomerStorage) GetAllCustomers() ([]core.Customer, error) {
 	query := "select id, name from customers c "
 
 	row, err := c.DB.Query(query)
 	if err != nil {
-		//w.WriteHeader(http.StatusBadRequest)
 		fmt.Println(err)
-		return []core.Customer{}
+		return []core.Customer{}, err
 	}
 
 	var customers []core.Customer
@@ -65,11 +64,11 @@ func (c CustomerStorage) GetAllCustomers() []core.Customer {
 		err := row.Scan(&customer.ID, &customer.Name)
 		if err != nil {
 			fmt.Println(err)
-			return []core.Customer{}
+			return []core.Customer{}, err
 		}
 		customers = append(customers, customer)
 
 	}
-	return customers
+	return customers, nil
 
 }

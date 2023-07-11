@@ -11,7 +11,7 @@ import (
 )
 
 type EmployeesApi struct {
-	es employees.EmployeesStorage
+	ES employees.EmployeesStorage
 }
 
 func (em EmployeesApi) CreateEmployees(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +24,13 @@ func (em EmployeesApi) CreateEmployees(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
-	em.es.CreateEmployees(employees)
+	err = employees.ValidateEmployees()
+	if err != nil {
+		fmt.Println("CreateProduct validate error", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	em.ES.CreateEmployees(employees)
 }
 
 func (em EmployeesApi) UpdateEmployees(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +48,7 @@ func (em EmployeesApi) UpdateEmployees(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	em.es.UpdateEmployees(employees)
+	em.ES.UpdateEmployees(employees)
 
 }
 
@@ -53,11 +59,11 @@ func (em EmployeesApi) DeleteById(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("DeleteById, cant convert id to int", err)
 		return
 	}
-	em.es.DeleteById(idInt)
+	em.ES.DeleteById(idInt)
 }
 
 func (em EmployeesApi) GetAllEmployees(w http.ResponseWriter, r *http.Request) {
-	employees := em.es.GetAllEmployees()
+	employees := em.ES.GetAllEmployees()
 	err := json.NewEncoder(w).Encode(employees)
 	if err != nil {
 		fmt.Println("GetAllEmployees: cant read json", err)

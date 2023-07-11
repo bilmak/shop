@@ -3,7 +3,13 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"net/http"
+	"shop/api"
 	"shop/config"
+	"shop/storage/customer"
+	"shop/storage/employees"
+	"shop/storage/products"
+	"shop/storage/sales"
 
 	_ "github.com/lib/pq"
 )
@@ -27,15 +33,16 @@ func main() {
 
 	fmt.Println("Successfully connected!")
 
-	// apiStruct := api.ApiStuct{
-	// 	api.CustomerApi{customer.CustomerStorage{DB: db}},
-	// 	api.EmployeesApi{employees.EmployeesStorage{DB: db}},
-	// 	api.ProductApi{products.ProductStorage{DB: db}},
-	// }
+	apiStruct := api.ApiStuct{
+		CS: api.CustomerApi{CC: customer.CustomerStorage{DB: db}},
+		ES: api.EmployeesApi{ES: employees.EmployeesStorage{DB: db}},
+		PS: api.ProductApi{PS: products.ProductStorage{DB: db}},
+		SA: api.SaleApi{SS: sales.SaleStorage{DB: db}},
+	}
 
-	// err = http.ListenAndServe(":8010", Routs(db))
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
+	err = http.ListenAndServe(":8010", apiStruct.Routs(db))
+	if err != nil {
+		fmt.Println(err)
+	}
 
 }

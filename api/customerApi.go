@@ -11,7 +11,7 @@ import (
 )
 
 type CustomerApi struct {
-	cusromerStor customer.CustomerStorage
+	CC customer.CustomerStorage
 }
 
 func (c CustomerApi) CreateCustomers(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +22,13 @@ func (c CustomerApi) CreateCustomers(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-	c.cusromerStor.CreateCustomers(customers)
+	err = customers.ValidateCustomer()
+	if err != nil {
+		fmt.Println("CreateProduct validate error", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	c.CC.CreateCustomers(customers)
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -45,7 +51,7 @@ func (c CustomerApi) UpdateCustomer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c.cusromerStor.UpdateCustomer(customers)
+	c.CC.UpdateCustomer(customers)
 }
 
 func (c CustomerApi) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
@@ -57,12 +63,17 @@ func (c CustomerApi) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c.cusromerStor.DeleteCustomer(idInt)
+	c.CC.DeleteCustomer(idInt)
 }
 
 func (c CustomerApi) GetAllCustomers(w http.ResponseWriter, r *http.Request) {
-	customer := c.cusromerStor.GetAllCustomers()
-	err := json.NewEncoder(w).Encode(customer)
+	customer, err := c.CC.GetAllCustomers()
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	err = json.NewEncoder(w).Encode(customer)
 	if err != nil {
 		fmt.Println("getAll: cant read json", err)
 		w.WriteHeader(http.StatusBadRequest)

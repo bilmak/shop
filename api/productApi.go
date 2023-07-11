@@ -11,7 +11,7 @@ import (
 )
 
 type ProductApi struct {
-	ps products.ProductStorage
+	PS products.ProductStorage
 }
 
 func (pa ProductApi) CreateProduct(w http.ResponseWriter, r *http.Request) {
@@ -23,13 +23,13 @@ func (pa ProductApi) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	err = product.Validate()
+	err = product.ValidateProduct()
 	if err != nil {
 		fmt.Println("CreateProduct validate error", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	pa.ps.CreateProduct(product)
+	pa.PS.CreateProduct(product)
 }
 
 func (pa ProductApi) UpdateProduct(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +45,7 @@ func (pa ProductApi) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	pa.ps.UpdateProduct(product)
+	pa.PS.UpdateProduct(product)
 }
 
 func (pa ProductApi) DeleteProduct(w http.ResponseWriter, r *http.Request) {
@@ -56,12 +56,12 @@ func (pa ProductApi) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-	pa.ps.DeleteProduct(idInt)
+	pa.PS.DeleteProduct(idInt)
 
 }
 
 func (pa ProductApi) GetAllProduct(w http.ResponseWriter, r *http.Request) {
-	products := pa.ps.GetAllProduct()
+	products := pa.PS.GetAllProduct()
 	err := json.NewEncoder(w).Encode(products)
 	if err != nil {
 		fmt.Println("GetAllProduct, newEncoder err", err)
