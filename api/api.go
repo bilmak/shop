@@ -34,6 +34,9 @@ func (a *ApiStuct) Routs(db *sql.DB) *chi.Mux {
 	r.Get("/products", a.PS.GetAllProduct)
 
 	r.Post("/sales", a.SA.CreateSale)
+	r.Put("/sales/{id}", a.SA.UpdateSale)
+	r.Delete("/sales/{id}", a.SA.DeleteSale)
+	r.Get("/sales", a.SA.GetAllSales)
 	return r
 }
 

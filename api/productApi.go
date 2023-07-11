@@ -61,8 +61,8 @@ func (pa ProductApi) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func (pa ProductApi) GetAllProduct(w http.ResponseWriter, r *http.Request) {
-	products := pa.PS.GetAllProduct()
-	err := json.NewEncoder(w).Encode(products)
+	products, err := pa.PS.GetAllProduct()
+	err = json.NewEncoder(w).Encode(products)
 	if err != nil {
 		fmt.Println("GetAllProduct, newEncoder err", err)
 	}

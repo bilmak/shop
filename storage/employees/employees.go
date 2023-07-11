@@ -10,36 +10,39 @@ type EmployeesStorage struct {
 	DB *sql.DB
 }
 
-func (em EmployeesStorage) CreateEmployees(employees core.Employees) {
+func (em EmployeesStorage) CreateEmployees(employees core.Employees) error {
 	query := "insert into employees(name) values ($1)"
 	_, err := em.DB.Exec(query, employees.Name)
 	if err != nil {
 		fmt.Println("CreateEmployees, query error", err)
-		return
+		return err
 	}
+	return nil
 }
 
-func (em EmployeesStorage) UpdateEmployees(employees core.Employees) {
+func (em EmployeesStorage) UpdateEmployees(employees core.Employees) error {
 	query := "update employees set name = $1 where id = $2; "
 	_, err := em.DB.Exec(query, employees.Name, employees.ID)
 	if err != nil {
 		fmt.Println("UpdateEmployees, query erorr", err)
-		return
+		return err
 	}
+	return nil
 }
 
-func (em EmployeesStorage) DeleteById(id int) {
+func (em EmployeesStorage) DeleteById(id int) error {
 	query := "delete from employees where id = $1"
 	result, err := em.DB.Exec(query, id)
 	if err != nil {
 		fmt.Println("DeleteById, query erorr", err)
 
-		return
+		return err
 	}
 	row, _ := result.RowsAffected()
 	if row == 0 {
-		return
+		return err
 	}
+	return nil
 }
 
 func (em EmployeesStorage) GetAllEmployees() []core.Employees {

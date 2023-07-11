@@ -10,42 +10,45 @@ type CustomerStorage struct {
 	DB *sql.DB
 }
 
-func (c CustomerStorage) CreateCustomers(customers core.Customer) {
+func (c CustomerStorage) CreateCustomers(customers core.Customer) error {
 	query := "insert into customers(name) values ($1);"
 	_, err := c.DB.Exec(query, customers.Name)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return err
 	}
+	return nil
 
 }
 
-func (c CustomerStorage) UpdateCustomer(customers core.Customer) {
+func (c CustomerStorage) UpdateCustomer(customers core.Customer) error {
 
 	query := "UPDATE customers SET name = $1 WHERE id = $2;"
 	_, err := c.DB.Exec(query, customers.Name, customers.ID)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return err
 	}
+	return nil
 }
 
-func (c CustomerStorage) DeleteCustomer(id int) {
+func (c CustomerStorage) DeleteCustomer(id int) error {
 	query := "delete from customers where id = $1"
 	result, err := c.DB.Exec(query, id)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return err
 	}
 
 	row, err := result.RowsAffected()
 	if err != nil {
 		fmt.Println(err)
-		return
+		return err
 	}
 	if row == 0 {
-		return
+		return err
 	}
+	return nil
 }
 
 func (c CustomerStorage) GetAllCustomers() ([]core.Customer, error) {
