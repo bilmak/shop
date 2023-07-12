@@ -66,3 +66,6 @@ func (em EmployeesStorage) GetAllEmployees() []core.Employees {
 	}
 	return employees
 }
+func (em EmployeesStorage) GetEmployeeByID(id int)(int, error){
+	return 1, nil
+}
