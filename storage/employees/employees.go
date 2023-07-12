@@ -66,6 +66,8 @@ func (em EmployeesStorage) GetAllEmployees() []core.Employees {
 	}
 	return employees
 }
-func (em EmployeesStorage) GetEmployeeByID(id int)(int, error){
+func (em EmployeesStorage) GetEmployeeByID(id int) (int, error) {
+	query := "select id, name from employees where id=$1"
+	fmt.Println(query)
 	return 1, nil
 }
