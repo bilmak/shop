@@ -72,3 +72,7 @@ func (em EmployeesApi) GetAllEmployees(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+func (em EmployeesApi)GetEmployeeByID(w http.ResponseWriter, r *http.Request){
+	
+}
